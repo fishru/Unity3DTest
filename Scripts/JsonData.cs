@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JsonData : MonoBehaviour
+public class JsonData
 {
-    public int id;
-    public float value;
+    public string action;
+    //public float value;
 }

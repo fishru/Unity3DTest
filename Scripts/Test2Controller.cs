@@ -18,10 +18,22 @@ public class Test2Controller : MonoBehaviour
     float vInput;
     float waitTime = 0.5f;
     float timer = 0.0f;
+    int actionID;
+    float actionValue;
+
+    Dictionary<string, Action> actionCategory;
     Dictionary<int, Action<float>> actionList;
     // Start is called before the first frame update
     void Start()
     {
+        actionCategory = new()
+        {
+            { "Left", () => { actionID = hMove; actionValue = -1; } },
+            { "Right", () => { actionID = hMove; actionValue = 1; } },
+            { "Forward", () => { actionID = vMove; actionValue = 1; } },
+            { "Back", () => { actionID = vMove; actionValue = -1; } },
+            { "Jump", () => { actionID = jump; actionValue = 1; } }
+        };
         actionList = new()
         {
             { hMove, x => { timer = 0.0f; hInput = x; vInput = 0; } },
@@ -63,9 +75,13 @@ public class Test2Controller : MonoBehaviour
         inputs.SprintInput(Convert.ToBoolean(sprintState));
     }
 
-    public void Action(int actionID, float actionValue)
+    //public void Action(int actionID, float actionValue)
+    public void Action(string action)
     {
-        Debug.Log("actionID: " + actionID + ", actionValue: " + actionValue);
+
+        //Debug.Log("actionID: " + actionID + ", actionValue: " + actionValue);
+        Debug.Log("Action: " + action);
+        actionCategory[action].DynamicInvoke();
         actionList[actionID].DynamicInvoke(actionValue);
     }
 }

@@ -21,13 +21,14 @@ public class TCPSocket : MonoBehaviour
     //https://docs.unity3d.com/ScriptReference/JsonUtility.FromJson.html
 
     Thread httpListenerThread;
-    int actionID;
-    float actionValue;
+    //int actionID;
+    //float actionValue;
+    string action;
 
     // Start is called before the first frame update
     void Start()
     {
-        string[] prefix = new string[] { "http://127.0.0.1:8080/" };
+        //string[] prefix = new string[] { "http://127.0.0.1:8000/" };
         httpListenerThread = new Thread(new ThreadStart(Listener));
         httpListenerThread.IsBackground = true;
         httpListenerThread.Start();
@@ -51,7 +52,7 @@ public class TCPSocket : MonoBehaviour
         HttpListener listener = new HttpListener();
         try
         {
-            string[] prefixes = new string[] { "http://127.0.0.1:8080/" };
+            string[] prefixes = new string[] { "http://127.0.0.1:8000/" };
             // URI prefixes are required,
             // for example "http://contoso.com:8080/index/".
             if (prefixes == null || prefixes.Length == 0)
@@ -79,9 +80,11 @@ public class TCPSocket : MonoBehaviour
                 text = reader.ReadToEnd();
                 JsonData data = JsonUtility.FromJson<JsonData>(text);
                 //Debug.Log("Action ID: " + data.id + ", Action Value: " + data.value );
-                actionID = data.id;
-                actionValue = data.value;
-                controller.Action(data.id, data.value);
+                //actionID = data.id;
+                //actionValue = data.value;
+                //controller.Action(data.id, data.value);
+                action = data.action;
+                controller.Action(action);
 
 
                 // Construct a response.
@@ -101,7 +104,7 @@ public class TCPSocket : MonoBehaviour
         {
             Debug.Log("SocketException " + socketException.ToString());
         }
-        finally //要加此區塊才能在遊戲結束時正常結束此thread
+        finally //For actually terminating the thread.
         {
             listener.Stop();
         }
